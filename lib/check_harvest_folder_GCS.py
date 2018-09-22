@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2018 vertnet.org"
-__version__ = "check_harvest_folder_GCS.py 2018-09-21T12:50-03:00"
+__version__ = "check_harvest_folder_GCS.py 2018-09-21T14:22-03:00"
 
 from googleapis import CloudStorage as CS
 from google_creds import cs_cred
@@ -54,7 +54,7 @@ def check_harvest_folder_GCS(cs, folders):
             else:
                 # Fail unless all folders can be found. 
                 s = 'Resource %s not found in %s. ' % (resource, bucket)
-                s += 'Check harvestfoldernew value in Carto.'
+                s += 'Check harvestfolder value in Carto.'
                 print '%s' % s
                 return False
         i += 1

@@ -1,5 +1,6 @@
 old/*
 lib/data/*
+lib/storage.dat
 lib/vertnet_latest*
 documents/*
 lib/tests/*
