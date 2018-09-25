@@ -19,10 +19,10 @@
 
 __author__ = "John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_utils.py 2016-07-26T14:07+2:00"
+__version__ = "harvest_utils.py 2018-09-24T13:22-3:00"
 
-from vn_utils import read_header
 import csv
+from vn_utils import read_header
 
 def get_harvest_folders_from_file(inputfile):     
     '''

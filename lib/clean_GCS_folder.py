@@ -21,13 +21,13 @@ __author__ = "John Wieczorek"
 __contributors__ = "John Wieczorek"
 __copyright__ = "Copyright 2018 vertnet.org"
 __this_file__ = "clean_GCS_folder.py"
-__revision_date__ = "2018-09-22T14:53-03:00"
+__revision_date__ = "2018-09-24T21:42-03:00"
 __version__ = "%s %s" % (__this_file__, __revision_date__)
 
-from googleapis import CloudStorage as CS
 # googleapis has an argparser, which will be invoked when the CloudStorage instance is
 # initiated. We must use that argparser and add our argument processing to it.
 from googleapis.GoogleAPI import parser
+from googleapis import CloudStorage as CS
 
 def get_file_count_from_GCS_folder(cs):
     '''
