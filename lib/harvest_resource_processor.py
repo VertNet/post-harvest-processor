@@ -20,7 +20,7 @@ __author__ = "John Wieczorek"
 __contributors__ = "John Wieczorek, Javier Otegui"
 __copyright__ = "Copyright 2018 vertnet.org"
 __this_file__ = "harvest_resource_processor.py"
-__revision_date__ = "2018-09-25T14:29-03:00"
+__revision_date__ = "2018-09-25T20:40-03:00"
 __version__ = "%s %s" % (__this_file__, __revision_date__)
 
 # googleapis has an argparser, which will be invoked when the CloudStorage instance is
@@ -29,7 +29,6 @@ from googleapis.GoogleAPI import parser
 from googleapis import CloudStorage as CS
 from google_creds import cs_cred
 from harvest_record_processor import VertNetHarvestFileProcessor
-from harvest_utils import get_harvest_folders_from_file
 from field_utils import index_fields
 from subprocess import call
 from datetime import datetime
@@ -203,7 +202,7 @@ def main():
       harvestfolder LIKE 'vertnet-harvesting/data/2018-09-21/%'
       order by icode, github_reponame asc
 
-    Invoke with bucket parameter as:
+    Invoke with Carto URL, Carto API key, and GCS bucket name parameters as:
        python check_harvest_folder_GCS.py /
          -u https://vertnet.carto.com/api/v2/sql /
          -c [carto_api_key] /

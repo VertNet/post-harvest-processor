@@ -21,7 +21,7 @@ __author__ = "John Wieczorek"
 __contributors__ = "John Wieczorek"
 __copyright__ = "Copyright 2018 vertnet.org"
 __this_file__ = "clean_GCS_folder.py"
-__revision_date__ = "2018-09-24T21:42-03:00"
+__revision_date__ = "2018-09-25T20:41-03:00"
 __version__ = "%s %s" % (__this_file__, __revision_date__)
 
 # googleapis has an argparser, which will be invoked when the CloudStorage instance is
@@ -99,7 +99,7 @@ def main():
     ''' 
     Remove from a Google Cloud Storage bucket files that are older than date provided.
 
-    Invoke with date parameter as:
+    Invoke with date, bucket, list_only parameters as:
        python clean_GCS_folder.py -d 2018-06-23 -b vn-downloads2
        or
        python clean_GCS_folder.py -d 2018-06-23 -b vn-downloads2 -l True

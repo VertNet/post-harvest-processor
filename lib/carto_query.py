@@ -16,36 +16,56 @@ __author__ = "Javier Otegui"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
 __this_file__ = "carto_query.py"
-__revision_date__ = "2018-09-24T20:59-03:00"
+__revision_date__ = "2018-09-25T20:53-03:00"
 __version__ = "%s %s" % (__this_file__, __revision_date__)
 
-"""Service to generate stats for the stats page."""
+from carto_utils import carto_query
+import argparse
 
-import carto_utils
-from urllib2 import urlopen
-from urllib import urlencode
-import json
+def _getoptions():
+    ''' Parse command line options and return them.'''
+    parser = argparse.ArgumentParser()
+
+    help = 'API key for Carto; required)'
+    parser.add_argument("-c","--carto_api_key", help=help, required=True)
+
+    return parser.parse_args()
 
 def main():
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cdbkey.txt')
-    api_key = open(path, "r").read().rstrip()
-    print "CARTO KEY %s" % api_key
-    logging.info("CARTO KEY %s" % api_key)
+    """ Example script to send SQL command to Carto."""
+    '''
+    Send SQL request to Carto.
 
+    Invoke with Carto API key parameter as:
+       python check_harvest_folder_GCS.py /
+         -c [carto_api_key]
+    '''
     url = "https://vertnet.carto.com/api/v2/sql"
-    q =  "SELECT icode, gbifdatasetid, harvestfolder "
+    options = _getoptions()
+
+    if options.carto_api_key is None or len(options.carto_api_key)==0:
+        s =  'syntax:\n'
+        s += 'python %s ' % __this_file__
+        s += '-c [carto_api_key '
+        print s
+        return
+
+    q =  "SELECT orgcountry, count(*) as reps "
     q += "FROM resource_staging "
     q += "WHERE "
-    q += "ipt=True AND networks like '%VertNet%' AND "
-    q += "harvestfolder LIKE 'vertnet-harvesting/data/2018-09-21/%' "
-    q += "order by icode, github_reponame asc"
-    
-    params = {'api_key':api_key, 'q':q}
-    data = urlencode(params)
+    q += "ipt=True AND networks like '%VertNet%' "
+    q += "GROUP BY orgcountry "
+    q += "ORDER BY reps DESC "
 
-    raw = urlopen(url, data=data).read()
-    d = json.loads(raw)['rows']
-    print "d: %s" % d
+#     q =  "SELECT icode, gbifdatasetid, harvestfolder "
+#     q += "FROM resource_staging "
+#     q += "WHERE "
+#     q += "ipt=True AND networks like '%VertNet%' AND "
+#     q += "harvestfolder LIKE 'vertnet-harvesting/data/2018-09-21/%' "
+#     q += "order by icode, github_reponame asc"
+#     
+    result = carto_query(url, options.carto_api_key, q)
+    print result
 
 if __name__ == "__main__":
     main()
