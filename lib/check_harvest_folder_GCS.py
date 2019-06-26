@@ -20,7 +20,7 @@ __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2018 vertnet.org"
 __this_file__ = "check_harvest_folder_GCS.py"
-__revision_date__ = "2018-09-25T20:40-03:00"
+__revision_date__ = "2018-10-16T20:44-03:00"
 __version__ = "%s %s" % (__this_file__, __revision_date__)
 
 # googleapis has an argparser, which will be invoked when the CloudStorage instance is
@@ -72,9 +72,6 @@ def _getoptions():
     # Use imported parser rather than create a new one
 #    parser = argparse.ArgumentParser()
 
-    help = 'Carto REST API URL; required)'
-    parser.add_argument("-u","--url", help=help, required=True)
-
     help = 'API key for Carto; required)'
     parser.add_argument("-c","--carto_api_key", help=help, required=True)
 
@@ -96,19 +93,16 @@ def main():
 
     Invoke with Carto URL, Carto API key, and GCS bucket name parameters as:
        python check_harvest_folder_GCS.py /
-         -u https://vertnet.carto.com/api/v2/sql /
          -c [carto_api_key] /
          -b vertnet-harvesting/data/2018-09-21/%
     '''
     options = _getoptions()
 
     if options.carto_api_key is None or len(options.carto_api_key)==0 or \
-       options.url is None or len(options.url)==0 or \
        options.bucket is None or len(options.bucket)==0:
         s =  'syntax:\n'
         s += 'python %s ' % __this_file__
-        s += '-u https://vertnet.carto.com/api/v2/sql '
-        s += '-c [carto_api_key '
+        s += '-c [carto_api_key] '
         s += '-b vertnet-harvesting/data/2018-09-21/%'
         print s
         return
@@ -117,19 +111,21 @@ def main():
     q += "FROM resource_staging "
     q += "WHERE "
     q += "ipt=True AND networks like '%VertNet%' AND "
-    q += "harvestfolder LIKE '%s' " % options.bucket
+    q += "harvestfolder LIKE '%s%%' " % options.bucket
     q += "order by icode, github_reponame asc"
 
     # Try getting the harvest folders directly from Carto resource_staging table matching 
     # harvestfolder.
-    harvestfolders = carto_query(options.url, options.carto_api_key, q)
+    carto_url = 'https://vertnet.carto.com/api/v2/sql'
+    harvestfolders = carto_query(carto_url, options.carto_api_key, q)
+    print 'q: %s\nfolders: %s' % (q, harvestfolders)
 
     # Create a CloudStorage Manager to be able to access Google Cloud Storage based on
     # the credentials stored in cs_cred.
     cs = CS.CloudStorage(cs_cred)
 
     if harvestfolders is None:
-        s = '
+        print ' No harvest folder given.'
         return None
 
     # Do a preliminary check of the folders in the harvest list
